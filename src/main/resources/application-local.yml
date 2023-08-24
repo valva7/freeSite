@@ -1,0 +1,54 @@
+# 서버 포트 설정
+server:
+  port: 8080
+
+spring:
+  # 애플리케이션 이름 및 환경 설정
+  application:
+    name: freeSite
+  output:
+    ansi:
+      enabled: always
+  profiles:
+    active: local # 활성화할 프로파일 설정 (local, dev, prod 등)
+
+  # Spring 데이터베이스 설정
+  datasource:
+    url: jdbc:mysql://localhost:3306/mydb
+    username: myuser
+    password: mypassword
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+  # H2 데이터베이스 설정
+  h2:
+    console:
+      enabled: true  # 여기까지만 해도 H2 Browser 생성됨
+      path: /h2  # 추가 - Context path 변경
+
+  # JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+        format_sql: true
+        show-sql: true
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 500
+          fetch_size: 500
+          batch_versioned_data: true
+
+# 로깅 설정
+logging:
+  level:
+    root: info
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr([${spring.application.name},%X{trace_id},%X{span_id}]) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m %n%wEx"
