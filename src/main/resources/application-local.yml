@@ -51,8 +51,8 @@ springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
+    enabled: true # Swagger UI를 활성화합니다.
     path: /
-    disable-swagger-default-url: true
     display-request-duration: true
     operations-sorter: alpha
 

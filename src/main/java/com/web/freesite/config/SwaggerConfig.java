@@ -30,8 +30,15 @@ public class SwaggerConfig {
     */
     @Bean
     public GroupedOpenApi demo() {
-        String[] paths = {"/demo/**", "/test/**"};
+        String[] paths = {"/demo/**"};
         return GroupedOpenApi.builder().group("demo").pathsToMatch(paths)
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi login() {
+        String[] paths = {"/login/**"};
+        return GroupedOpenApi.builder().group("login").pathsToMatch(paths)
                 .build();
     }
 
