@@ -9,34 +9,26 @@ spring:
   output:
     ansi:
       enabled: always
-  profiles:
-    active: local # 활성화할 프로파일 설정 (local, dev, prod 등)
 
   # Spring 데이터베이스 설정
   datasource:
-    url: jdbc:mysql://localhost:3306/mydb
-    username: myuser
-    password: mypassword
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:tcp://localhost/~/freeSite
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-
-  # H2 데이터베이스 설정
-  h2:
-    console:
-      enabled: true  # 여기까지만 해도 H2 Browser 생성됨
-      path: /h2  # 추가 - Context path 변경
 
   # JPA 설정
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
         show-sql: true
         order_inserts: true
@@ -52,9 +44,22 @@ springdoc:
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
     enabled: true # Swagger UI를 활성화합니다.
-    path: /
+    path: /index.html
     display-request-duration: true
     operations-sorter: alpha
+
+jwt:
+  #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
+  #echo 'silvernine-tech-spring-boot-jwt-tutorial-secret-silvernine-tech-spring-boot-jwt-tutorial-secret' 이라는 문자열을 base64로 인코딩
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+  expirationMs: 86400	# 초
+
+kakao:
+    req-url: https://kauth.kakao.com/oauth/token
+    getUser-url: https://kapi.kakao.com/v2/user/me
+    redirect-url: http://localhost:3000/kakao/callback
+    apikey: 4a61ea8b549b24a89de92ba2670a39e9
+    secret: yOdfaU3DfrLlQ1ulweFKFIxhBMi3SL5b
 
 # 로깅 설정
 logging:
