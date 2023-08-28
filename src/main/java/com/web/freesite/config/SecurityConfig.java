@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -29,13 +30,9 @@ public class SecurityConfig {
 
     private static final String[] whiteList = new String[] {
             "/v3/api-docs/**",
-            "/configuration/ui",
-            "/swagger-resources/**",
-            "/configuration/security",
-            "/swagger-ui.html",
             "/swagger-ui/**",
-            "/webjars/**",
-            "/login/**",
+            "/login/**"
+            //"/demo/**"
     };
 
 
@@ -49,6 +46,8 @@ public class SecurityConfig {
         return httpSecurity
                 .cors().configurationSource(corsConfigurationSource()).and()    //CORS 설정
                 .csrf().disable()   // swagger API 호출시 403 에러 발생 방지
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(new OrRequestMatcher(requestMatchers)).permitAll()
@@ -56,8 +55,6 @@ public class SecurityConfig {
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()   // 토큰 기반 인증이므로 세션 역시 사용 X
                 .httpBasic().disable()   // rest api 만을 고려하여 기본 설정은 해제
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class)
                 .getOrBuild();
     }
 
@@ -67,6 +64,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 허용할 도메인
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

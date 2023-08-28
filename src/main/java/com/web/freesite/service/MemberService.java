@@ -90,7 +90,7 @@ public class MemberService {
     }
 
     @Transactional
-    public String getUserInfo(String accessToken) throws IOException, ParseException {
+    public String[] getUserInfo(String accessToken) throws IOException, ParseException {
 
         //HttpHeader 생성
         HttpHeaders headers = new HttpHeaders();
@@ -138,8 +138,11 @@ public class MemberService {
         }
 
         // TODO : 사용자 정보를 DTO로 변환해서 반환하는 부분 추가
+        String[] accessArr = new String[] {
+                    email, createdJwtToken
+                };
 
-        return createdJwtToken;
+        return accessArr;
     }
 
 
